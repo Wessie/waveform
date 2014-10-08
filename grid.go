@@ -5,11 +5,21 @@ import (
 	"image/color"
 )
 
+// Stack is a simple image.Image implementation that stacks other
+// image.Image's on top of each other vertically.
+//
+// The width of the Stack is of the widest image given. The height
+// of the Stack is the height of each image added up.
+//
+// Points that fall outside of the image.Image return an undefined
+// color.Color, therefore it is suggested to only use images of the
+// same width.
 type Stack struct {
 	width, height int
 	imgs          []image.Image
 }
 
+// NewStack creates a new Stack from the images passed in.
 func NewStack(imgs ...image.Image) image.Image {
 	var w, h int
 	for i := range imgs {
@@ -27,6 +37,7 @@ func NewStack(imgs ...image.Image) image.Image {
 	}
 }
 
+// Bounds implements the image.Image method
 func (s *Stack) Bounds() image.Rectangle {
 	return image.Rectangle{
 		Min: image.Point{0, 0},
@@ -34,6 +45,7 @@ func (s *Stack) Bounds() image.Rectangle {
 	}
 }
 
+// At implements the image.Image method
 func (s *Stack) At(x, y int) color.Color {
 	var passedY int
 	for i := range s.imgs {
@@ -52,6 +64,7 @@ func (s *Stack) At(x, y int) color.Color {
 	return nil
 }
 
+// ColorModel implements the image.Image method
 func (s *Stack) ColorModel() color.Model {
 	return color.RGBAModel
 }
